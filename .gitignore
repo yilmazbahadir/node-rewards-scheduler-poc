@@ -1,0 +1,16 @@
+.idea
+**/node_modules
+**/dist
+**/build
+**/.vscode
+*.eslintcache
+*.env
+*.log
+*.iml
+**/gen-src/
+**/coverage/
+**/.nyc_output/
+/packages/data-access/data/
+/**/*.pem
+/**/*.srl
+/**/*.pfx
