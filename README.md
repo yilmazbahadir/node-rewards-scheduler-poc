@@ -1,4 +1,4 @@
-# Bull queue test
+# Node Rewards Scheduler PoC
 
 
 
