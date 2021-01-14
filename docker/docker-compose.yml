@@ -1,0 +1,66 @@
+version: '3.3'
+services:
+
+#DO NOT FORGET TO SET VOLUMES FOR THE CONTAINERS
+  grafana:
+    build: './grafana'
+    container_name: 'grafana'
+    ports:
+      - '3000:3000'
+    environment:
+      - DS_PROMETHEUS=prom1
+    depends_on:
+      - prometheus
+    networks:
+      - scheduler
+      
+  prometheus:
+    build: './prometheus'
+    container_name: 'prometheus'
+    ports:
+      - '9090:9090'
+    depends_on:
+      - bull-prometheus-exporter
+    networks:
+      - scheduler
+
+  bull-prometheus-exporter:
+    image: 'uphabit/bull_exporter:latest'
+    ports:
+      - '9538:9538'
+    environment:
+      - EXPORTER_REDIS_URL=redis:6379
+      - EXPORTER_QUEUES=nodeTestingJob enrolJob payoutJob
+    container_name: 'bull-prometheus-exporter'
+    depends_on:
+      - redis
+    networks:
+      - scheduler
+
+  bullboard:
+    container_name: bullboard
+    image: deadly0/bull-board
+    restart: always
+    ports:
+      - 3001:3000
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_USE_TLS=false
+      - BULL_PREFIX=bull
+    depends_on:
+      - redis
+    networks:
+      - scheduler
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - '6379:6379'
+    networks:
+      - scheduler
+    container_name: 'redis'
+
+
+networks:
+  scheduler:

@@ -15,14 +15,24 @@ const argsObj: any = (() => {
 })();
 
 const taskWorker = (jobName: string, taskNames = "all") =>
-  new Worker(jobName, async (job) =>
-    console.log(
-      `${job.name}-worker running tasks[${taskNames}], data[${JSON.stringify(
-        job.data
-      )}], processed on:${moment(job.processedOn).format(
-        "MM-DD-YY HH:mm:ss:SSS"
-      )}`
-    )
+  new Worker(
+    jobName,
+    async (job) =>
+      new Promise((resolve) => {
+        const timeout = Math.ceil(Math.random() * 30_000);
+        setTimeout(() => {
+          console.log(
+            `${
+              job.name
+            }-worker running tasks[${taskNames}], data[${JSON.stringify(
+              job.data
+            )}], processed on:${moment(job.processedOn).format(
+              "MM-DD-YY HH:mm:ss:SSS"
+            )}, took ${timeout} ms`
+          );
+          resolve(true);
+        }, timeout);
+      })
   );
 
 const scheduler = new Scheduler();

@@ -10,7 +10,6 @@
 **/gen-src/
 **/coverage/
 **/.nyc_output/
-/packages/data-access/data/
 /**/*.pem
 /**/*.srl
 /**/*.pfx
